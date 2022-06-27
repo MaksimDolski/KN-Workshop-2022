@@ -24,7 +24,6 @@ export const SearchEmployeesFilterPanel = ({ businessUnits, countries, onSearchE
     setSearchLastName("");
     setBusinessUnitSelected(null);
     setSearchHiringDate(undefined);
-    setCountrySelected(null);
   };
 
   const findByAllParameters = () => {

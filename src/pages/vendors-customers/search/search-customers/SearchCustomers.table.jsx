@@ -1,7 +1,7 @@
 import { TwoMouseEventActionButtons } from "components/widgets";
 
 export const customersTableColumns = ({ onDetailsButtonClick, onRemoveButtonClick }) => {
-  return [
+  const tableArray = [
     {
       accessor: "id",
       Header: "id",
@@ -38,6 +38,11 @@ export const customersTableColumns = ({ onDetailsButtonClick, onRemoveButtonClic
       accessor: "rate",
       Header: "Hourly Rate",
     },
-    TwoMouseEventActionButtons({ onDetailsButtonClick, onRemoveButtonClick }),
   ];
+
+  if (onDetailsButtonClick && onRemoveButtonClick) {
+    tableArray.push(TwoMouseEventActionButtons({ onDetailsButtonClick, onRemoveButtonClick }));
+  }
+
+  return tableArray;
 };

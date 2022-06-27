@@ -1,1 +1,1 @@
-export * from "./CustomerDetails.page";
+export * from "./CustomerDetails.page.jsx";

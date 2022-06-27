@@ -3,9 +3,9 @@ import { useState } from "react";
 import { Col, Row } from "reactstrap";
 
 import { FilterPanel } from "components/panels";
-import { InputField, DateField, SelectField } from "components/widgets";
+import { DateField, InputField, SelectField } from "components/widgets";
 
-import { documentRatings, DATE_FILTER_FORMAT } from "variables/app.consts";
+import { DATE_FILTER_FORMAT, documentRatings } from "variables/app.consts";
 
 export const SearchDocumentsFilterPanel = ({ onSearch }) => {
   const [searchAuthor, setSearchAuthor] = useState("");
@@ -26,8 +26,8 @@ export const SearchDocumentsFilterPanel = ({ onSearch }) => {
   };
 
   const findByAllParameters = () => {
-    const filters = parametersToFilter();
-    onSearch(filters);
+    const searchFilters = parametersToFilter();
+    onSearch(searchFilters);
   };
 
   const parametersToFilter = () => {

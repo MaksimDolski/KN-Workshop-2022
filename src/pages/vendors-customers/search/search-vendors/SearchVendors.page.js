@@ -1,26 +1,24 @@
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { Card, CardHeader, Container, Row } from "reactstrap";
 
+import { deleteVendor, searchVendors, selectAllVendorData } from "redux/features";
+
 import { ReactTable } from "components/widgets";
 
 import { VENDOR_DETAILS } from "pages/vendors-customers";
-
-import { vendorService } from "api";
 
 import { SearchVendorsFilterPanel } from "./SearchVendors.filter";
 import { vendorsTableColumns } from "./SearchVendors.table";
 
 export const SearchVendorsPage = ({ option }) => {
   const navigate = useNavigate();
-
-  const [vendors, setVendors] = useState([]);
+  const dispatch = useDispatch();
+  const vendors = useSelector(selectAllVendorData);
 
   const onSearchVendors = async filters => {
-    const queryParams = new URLSearchParams(filters);
-    const { data } = await vendorService.searchVendors(queryParams);
-    setVendors(data);
+    dispatch(searchVendors(filters));
   };
 
   const onViewVendorDetails = e => {
@@ -32,8 +30,7 @@ export const SearchVendorsPage = ({ option }) => {
   const onDeleteVendor = async e => {
     e.preventDefault();
     const { id } = e.currentTarget;
-    await vendorService.deleteVendor(parseInt(id));
-    setVendors(vendors.filter(vendor => vendor.id !== parseInt(id)));
+    dispatch(deleteVendor(parseInt(id)));
   };
 
   return (

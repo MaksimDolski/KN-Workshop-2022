@@ -1,30 +1,25 @@
-import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { Button, Card, CardBody, CardHeader, Col, Container, Row, Spinner } from "reactstrap";
 
+import { selectVendorById, updateVendor } from "redux/features";
+
 import { BoxHeader } from "components/headers";
 
 import { VendorPanel } from "pages/vendors-customers/panels/vendor-panel";
-import { VENDORS_CUSTOMERS_PAGE } from "pages/vendors-customers/vendorsCustomers.routes.const";
 
-import { vendorService } from "api";
 import { useLocalStateAlerts } from "hooks";
+
+import { VENDORS_CUSTOMERS_PAGE } from "../../vendorsCustomers.routes.const";
 
 export const VendorDetailsPage = () => {
   const { id } = useParams();
   const vendorId = parseInt(id);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { alert, setSaveSent, setSuccessMessage, setIsSuccess } = useLocalStateAlerts();
-  const [vendor, setVendor] = useState();
-
-  useEffect(() => {
-    const fetchVendor = async () => {
-      const { data } = await vendorService.getVendorById(vendorId);
-      setVendor(data);
-    };
-    fetchVendor();
-  }, []);
+  const vendor = useSelector(selectVendorById(vendorId));
 
   if (!vendor) {
     return (
@@ -35,11 +30,7 @@ export const VendorDetailsPage = () => {
   }
 
   const onSaveVendor = async updatedVendor => {
-    const { data } = await vendorService.updateVendor({
-      id: vendorId,
-      body: updatedVendor,
-    });
-    setVendor(vendor => ({ ...vendor, ...data }));
+    dispatch(updateVendor({ id: vendorId, body: updatedVendor }));
     setSuccessMessage("Vendor Updated");
     setSaveSent(true);
     setIsSuccess(true);

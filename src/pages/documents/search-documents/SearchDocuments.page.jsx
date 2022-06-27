@@ -15,14 +15,15 @@
 
 */
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { Card, CardHeader, Col, Container, Row } from "reactstrap";
 
+import { deleteDocument, searchDocuments, selectAllDocumentsData } from "redux/features";
+
 import { BoxHeader } from "components/headers";
 import { ReactTable } from "components/widgets";
-
-import { documentService } from "api";
 
 import { DocumentHighlightsPanel } from "../document-panels";
 import { DOCUMENT_DETAILS } from "../documents.routes.const";
@@ -31,15 +32,14 @@ import { documentsTableColumns, SearchDocumentsFilterPanel } from ".";
 
 export const SearchDocumentsPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [alert] = useState(null);
 
-  const [documents, setDocuments] = useState([]);
+  const documents = useSelector(selectAllDocumentsData);
 
-  const onSearchDocuments = async filters => {
-    const queryParams = new URLSearchParams(filters);
-    const { data } = await documentService.searchDocuments(queryParams);
-    setDocuments(data);
+  const onSearchDocuments = filters => {
+    dispatch(searchDocuments(filters));
   };
 
   const onViewDocumentDetails = e => {
@@ -47,12 +47,10 @@ export const SearchDocumentsPage = () => {
     navigate(`/admin${DOCUMENT_DETAILS}/${id}`);
   };
 
-  const onDeleteDocument = async e => {
+  const onDeleteDocument = e => {
     e.preventDefault();
     const { id } = e.currentTarget;
-    await documentService.deleteDocument(parseInt(id));
-
-    setDocuments(documents.filter(document => document.id !== parseInt(id)));
+    dispatch(deleteDocument(parseInt(id)));
   };
 
   return (

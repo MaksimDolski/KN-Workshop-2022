@@ -1,8 +1,8 @@
 import {
   CreateGroupPage,
   GroupDetailsPage,
-  GROUP_DETAILS,
   GROUP_CREATE,
+  GROUP_DETAILS,
   GROUP_SEARCH,
   SearchGroupsPage,
 } from ".";
@@ -15,6 +15,7 @@ export const groupMenu = [
     state: "groupCollapse",
     path: "GroupsMenu",
     key: "GroupsMenu",
+
     views: [
       {
         path: GROUP_CREATE,

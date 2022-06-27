@@ -1,26 +1,24 @@
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { Card, CardHeader, Container, Row } from "reactstrap";
 
+import { deleteCustomer, searchCustomers, selectAllCustomerData } from "redux/features";
+
 import { ReactTable } from "components/widgets";
 
 import { CUSTOMER_DETAILS } from "pages/vendors-customers";
-
-import { customerService } from "api";
 
 import { SearchCustomersFilterPanel } from "./SearchCustomers.filter";
 import { customersTableColumns } from "./SearchCustomers.table";
 
 export const SearchCustomersPage = ({ option }) => {
   const navigate = useNavigate();
-
-  const [customers, setCustomers] = useState([]);
+  const dispatch = useDispatch();
+  const customers = useSelector(selectAllCustomerData);
 
   const onSearchCustomers = async filters => {
-    const queryParams = new URLSearchParams(filters);
-    const { data } = await customerService.searchCustomers(queryParams);
-    setCustomers(data);
+    dispatch(searchCustomers(filters));
   };
 
   const onViewCustomerDetails = e => {
@@ -32,8 +30,7 @@ export const SearchCustomersPage = ({ option }) => {
   const onDeleteCustomer = async e => {
     e.preventDefault();
     const { id } = e.currentTarget;
-    await customerService.deleteCustomer(parseInt(id));
-    setCustomers(customers.filter(customer => customer.id !== parseInt(id)));
+    dispatch(deleteCustomer(parseInt(id)));
   };
 
   return (

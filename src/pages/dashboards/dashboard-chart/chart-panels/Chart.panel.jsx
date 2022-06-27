@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardBody, Spinner } from "reactstrap";
+import { Card, CardBody, CardHeader, Spinner } from "reactstrap";
 
 export const ChartPanel = ({ chart, title, subTitle, isLoading, alert }) => {
   return (

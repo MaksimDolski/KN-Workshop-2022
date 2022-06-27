@@ -1,3 +1,4 @@
+import { authMenu } from "pages/auth";
 import { dashboardMenu } from "pages/dashboards";
 import { documentsMenu } from "pages/documents";
 import { groupMenu } from "pages/groups";
@@ -11,5 +12,6 @@ export const routes = [
   ...groupMenu,
   ...dashboardMenu,
   ...documentsMenu,
+  ...authMenu,
   ...vendorsCustomersMenu,
 ];

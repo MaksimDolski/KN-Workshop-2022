@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { Button, Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
+import { Button, Card, CardBody, CardHeader, Col, Container, Row, Spinner } from "reactstrap";
+
+import { selectGroupById, updateGroup } from "redux/features";
 
 import { BoxHeader } from "components/headers";
 import { InputField } from "components/widgets";
 
-import { groupsData } from "data";
 import { useFeatureDisabledWarning, useLocalStateAlerts } from "hooks";
 
 import { MembersPanel } from "..";
@@ -15,27 +17,36 @@ export const GroupDetailsPage = () => {
   const { id } = useParams();
   const groupId = parseInt(id);
   const navigate = useNavigate();
-  const [group, setGroup] = useState(groupsData.find(e => e.id === groupId));
+  const dispatch = useDispatch();
+
+  const groupState = useSelector(selectGroupById(groupId));
+  const [group, setGroup] = useState(groupState);
 
   const { alert, setSaveSent, setSuccessMessage, setIsSuccess } = useLocalStateAlerts();
 
   const { fireAlert } = useFeatureDisabledWarning();
 
+  if (!group) {
+    return (
+      <div className="text-center">
+        <Spinner />
+      </div>
+    );
+  }
+
   const onSaveGroup = () => {
-    console.log("update group", groupId, group);
+    dispatch(updateGroup({ id: groupId, body: group }));
+
     setSuccessMessage("Group Updated");
-    setIsSuccess(true);
     setSaveSent(true);
+    setIsSuccess(true);
   };
 
   const onToggleGroupActive = () => {
     fireAlert();
-
-    console.log("toggle group active", groupId, group);
   };
   const onDeleteGroup = () => {
     fireAlert();
-    console.log("delete group", groupId);
   };
 
   return (
@@ -80,7 +91,7 @@ export const GroupDetailsPage = () => {
                         <InputField
                           id="input-group-name"
                           label="Group Name"
-                          value={group.name}
+                          value={group?.name}
                           type="text"
                           onChange={e =>
                             setGroup({
@@ -97,7 +108,7 @@ export const GroupDetailsPage = () => {
                         <InputField
                           id="input-group-description"
                           label="Group Description"
-                          value={group.description}
+                          value={group?.description}
                           type="text"
                           onChange={e =>
                             setGroup({

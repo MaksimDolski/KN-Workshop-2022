@@ -4,7 +4,7 @@ import { ThemeColors } from "variables/app.consts";
 
 import { pieDataTemplate, pieOptionsTemplate } from "..";
 
-const toPieChartUI = apiResponse => {
+const toPieChartUI = response => {
   const template = pieDataTemplate({
     label: "Seniority",
     backgroundColor: [
@@ -17,7 +17,7 @@ const toPieChartUI = apiResponse => {
     ],
   });
 
-  apiResponse.forEach(record => {
+  response.forEach(record => {
     template.labels?.push(record.label);
     template.datasets[0].data.push(record.value);
   });
@@ -29,6 +29,6 @@ const toPieChartUI = apiResponse => {
 };
 
 export const renderChart = response => {
-  const pieChart = toPieChartUI(response);
+  const pieChart = toPieChartUI(response.data);
   return <Pie data={pieChart.data} options={pieChart.options} className="chart-canvas" />;
 };

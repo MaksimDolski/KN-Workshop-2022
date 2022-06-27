@@ -8,6 +8,7 @@ export const userMenu = [
     state: "usersCollapse",
     path: "UsersMenu",
     key: "UsersMenu",
+
     views: [
       {
         path: EMPLOYEE_SEARCH,

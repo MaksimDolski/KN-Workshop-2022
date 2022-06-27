@@ -1,30 +1,26 @@
-import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { Button, Card, CardBody, CardHeader, Col, Container, Row, Spinner } from "reactstrap";
 
+import { selectCustomerById, updateCustomer } from "redux/features";
+
 import { BoxHeader } from "components/headers";
 
 import { CustomerPanel } from "pages/vendors-customers/panels/customer-panel";
-import { VENDORS_CUSTOMERS_PAGE } from "pages/vendors-customers/vendorsCustomers.routes.const";
 
-import { customerService } from "api";
 import { useLocalStateAlerts } from "hooks";
+
+import { VENDORS_CUSTOMERS_PAGE } from "../../vendorsCustomers.routes.const";
 
 export const CustomerDetailsPage = () => {
   const { id } = useParams();
   const customerId = parseInt(id);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { alert, setSaveSent, setSuccessMessage, setIsSuccess } = useLocalStateAlerts();
-  const [customer, setCustomer] = useState();
+  const customer = useSelector(selectCustomerById(customerId));
 
-  useEffect(() => {
-    const fetchCustomer = async () => {
-      const { data } = await customerService.getCustomerById(customerId);
-      setCustomer(data);
-    };
-    fetchCustomer();
-  }, []);
   if (!customer) {
     return (
       <div className="text-center">
@@ -34,11 +30,7 @@ export const CustomerDetailsPage = () => {
   }
 
   const onSaveCustomer = async updatedCustomer => {
-    const { data } = await customerService.updateCustomer({
-      id: customerId,
-      body: updatedCustomer,
-    });
-    setCustomer(customer => ({ ...customer, ...data }));
+    dispatch(updateCustomer({ id: customerId, body: updatedCustomer }));
     setSuccessMessage("Customer Updated");
     setSaveSent(true);
     setIsSuccess(true);

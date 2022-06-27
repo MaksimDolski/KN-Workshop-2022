@@ -1,25 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Button, ButtonGroup, Col, Row } from "reactstrap";
-
-import { selectGroupMembers } from "pages/utils";
 
 import { AddMemberPanel, CurrentMemberPanel } from ".";
 
 export const MembersPanel = ({ group, setGroup }) => {
   const [currentMembersCollapse, setCurrentMembersCollapse] = useState(false);
   const [addMemberCollapse, setAddMemberCollapse] = useState(false);
+
   const [currentGroupMembers, setCurrentGroupMembers] = useState([]);
-
-  useEffect(() => {
-    const findGroupMembers = async () => {
-      const members = await selectGroupMembers(group.id);
-      setCurrentGroupMembers(members);
-    };
-    findGroupMembers();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [group.id]);
 
   const toggleCurrentMembers = () => {
     setCurrentMembersCollapse(!currentMembersCollapse);
@@ -62,6 +51,7 @@ export const MembersPanel = ({ group, setGroup }) => {
       <Row>
         <Col lg="12">
           <CurrentMemberPanel
+            group={group}
             currentMembersCollapse={currentMembersCollapse}
             currentGroupMembers={currentGroupMembers}
             setGroup={setGroup}

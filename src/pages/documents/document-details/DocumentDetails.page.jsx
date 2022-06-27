@@ -15,9 +15,10 @@
 
 */
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Document, Page } from "react-pdf/dist/esm/entry.webpack"; //this will optimize load with webworker
 import Rating from "react-rating";
+import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 
 import {
@@ -35,34 +36,25 @@ import {
   Spinner,
 } from "reactstrap";
 
+import { selectDocumentById } from "redux/features";
+
 import { BoxHeader } from "components/headers";
 import { InputField } from "components/widgets";
 
-import { documentService } from "api";
 import { huddle64pdf } from "data";
 import { DATE_FILTER_FORMAT } from "variables/app.consts";
 
-import { SEARCH_DOCUMENT } from "../documents.routes.const";
+import { SEARCH_DOCUMENT } from "..";
 
 export const DocumentDetailPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const documentId = parseInt(id);
 
-  const [document, setDocument] = useState();
+  const document = useSelector(selectDocumentById(documentId));
 
-  const [numPages, setNumPages] = useState(null);
+  const [numPages, setNumPages] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
-
-  useEffect(() => {
-    const fetchDocument = async () => {
-      const { data } = await documentService.getDocumentById(documentId);
-      setDocument(data);
-    };
-    fetchDocument();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   if (!document) {
     return (

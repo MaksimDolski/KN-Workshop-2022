@@ -4,13 +4,13 @@ import { ThemeColors } from "variables/app.consts";
 
 import { pieDataTemplate, pieOptionsTemplate } from "..";
 
-const toPieChartUI = apiResponse => {
+const toPieChartUI = response => {
   const genderTemplate = pieDataTemplate({
     label: "Gender",
     backgroundColor: [ThemeColors.theme["primary"], ThemeColors.theme["info"]],
   });
 
-  apiResponse.forEach(genderRecord => {
+  response.forEach(genderRecord => {
     genderTemplate.labels?.push(genderRecord.label);
     genderTemplate.datasets[0].data.push(genderRecord.value);
   });
@@ -22,6 +22,6 @@ const toPieChartUI = apiResponse => {
 };
 
 export const renderChart = response => {
-  const pieChart = toPieChartUI(response);
+  const pieChart = toPieChartUI(response.data);
   return <Pie data={pieChart.data} options={pieChart.options} className="chart-canvas" />;
 };

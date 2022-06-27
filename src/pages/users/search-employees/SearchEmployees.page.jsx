@@ -1,34 +1,34 @@
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { Card, CardHeader, Container, Row } from "reactstrap";
+
+import {
+  deleteEmployee,
+  searchEmployees,
+  selectAllBusinessUnitsDataAsSelectOptions,
+  selectAllCountriesDataAsSelectOptions,
+  selectAllEmployeeData,
+} from "redux/features";
 
 import { BoxHeader } from "components/headers";
 import { ReactTable } from "components/widgets";
 
 import { EMPLOYEE_DETAILS } from "pages/users";
 
-import { employeeService } from "api";
-
-import {
-  selectAllBusinessUnitsDataAsSelectOptions,
-  selectAllCountriesDataAsSelectOptions,
-} from "../../utils";
-
 import { employeesTableColumns, SearchEmployeesFilterPanel } from ".";
 
 export const SearchEmployeesPage = () => {
   const navigate = useNavigate();
 
-  const [employees, setEmployees] = useState([]);
+  const dispatch = useDispatch();
+  const employees = useSelector(selectAllEmployeeData);
 
-  const businessUnits = selectAllBusinessUnitsDataAsSelectOptions();
-  const countries = selectAllCountriesDataAsSelectOptions();
+  const businessUnits = useSelector(selectAllBusinessUnitsDataAsSelectOptions);
+  const countries = useSelector(selectAllCountriesDataAsSelectOptions);
 
   const onSearchEmployees = async filters => {
-    const queryParams = new URLSearchParams(filters);
-    const { data } = await employeeService.searchEmployees(queryParams);
-    setEmployees(data);
+    dispatch(searchEmployees(filters));
   };
 
   const onViewEmployeeDetails = e => {
@@ -41,8 +41,7 @@ export const SearchEmployeesPage = () => {
     e.preventDefault();
     const { id } = e.currentTarget;
 
-    await employeeService.deleteEmployee(parseInt(id));
-    setEmployees(employees.filter(employee => employee.id !== parseInt(id)));
+    dispatch(deleteEmployee(parseInt(id)));
   };
 
   return (

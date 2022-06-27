@@ -1,18 +1,34 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Card, CardHeader, Collapse } from "reactstrap";
 
+import { employeeService } from "redux/features";
+
 import { ReactTable } from "components/widgets";
 
-import { EMPLOYEE_DETAILS, employeesTableColumns } from "pages/users";
+import { employeesTableColumns, EMPLOYEE_DETAILS } from "pages/users";
 
 export const CurrentMemberPanel = ({
+  group,
   currentMembersCollapse,
   currentGroupMembers,
   setGroup,
   setCurrentGroupMembers,
 }) => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchGroupMembers = async members => {
+      const groupMembers = await employeeService.searchEmployeesByIds(members);
+      setCurrentGroupMembers(groupMembers.data);
+    };
+
+    if (group.members.length > 0) {
+      fetchGroupMembers(group.members);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onViewMemberDetails = e => {
     const { id } = e.currentTarget;

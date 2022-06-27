@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Card, Collapse } from "reactstrap";
+
+import { searchEmployees, selectAllEmployeeData } from "redux/features";
 
 import { AddNewMemberButton } from "components/buttons";
 import { ReactTable } from "components/widgets";
 
-import { SearchAdvancedEmployeesFilterPanel, employeesTableColumns } from "pages/users";
+import { employeesTableColumns, SearchAdvancedEmployeesFilterPanel } from "pages/users";
 
-import { employeeService } from "api";
 import { useLocalStateAlerts } from "hooks";
 
 export const AddMemberPanel = ({
@@ -17,16 +19,15 @@ export const AddMemberPanel = ({
   currentGroupMembers,
   setCurrentGroupMembers,
 }) => {
+  const dispatch = useDispatch();
   const { alert, setSaveSent, setSuccessMessage, setIsSuccess } = useLocalStateAlerts();
 
   const [filters, setFilters] = useState({});
 
-  const [employees, setEmployees] = useState([]);
+  const employees = useSelector(selectAllEmployeeData);
 
   const onSearchEmployees = async filters => {
-    const queryParams = new URLSearchParams(filters);
-    const { data } = await employeeService.searchEmployees(queryParams);
-    setEmployees(data);
+    dispatch(searchEmployees(filters));
   };
 
   useEffect(() => {
